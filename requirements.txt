@@ -1,0 +1,4 @@
+# requirements.txt
+# Aucune dépendance externe.
+
+# Python 3.x seulement.
