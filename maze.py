@@ -62,7 +62,6 @@ def _carve_random_walk_path(n: int, rng: random.Random, start: Pos, goal: Pos) -
                 moves.append((nr, nc))
 
         if not moves:
-            # backtrack si coincé
             path.pop()
             r, c = path[-1]
             continue
@@ -96,11 +95,9 @@ def generate_maze(size: int = 16, wall_prob: float = 0.28, seed: Optional[int] =
 
     grid = [[WALL for _ in range(size)] for _ in range(size)]
 
-    # chemin garanti
     path_cells = _carve_random_walk_path(size, rng, start, goal)
     path_set = set(path_cells)
 
-    # intérieur : chemin + aléatoire
     for r in range(1, size - 1):
         for c in range(1, size - 1):
             if (r, c) in path_set:
