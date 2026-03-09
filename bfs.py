@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Set
+from collections import deque
 import time
 from maze import Maze, Pos
 
@@ -26,32 +27,32 @@ def reconstruct(came_from: Dict[Pos, Optional[Pos]], goal: Pos) -> List[Pos]:
     return out
 
 
-def dfs(maze: Maze) -> SearchResult:
+def bfs(maze: Maze) -> SearchResult:
     t0 = time.perf_counter()
 
     start, goal = maze.start, maze.goal
-    stack: List[Pos] = [start]        # pile LIFO
+    q = deque([start])
     came_from: Dict[Pos, Optional[Pos]] = {start: None}
     visited: Set[Pos] = {start}
     explored_order: List[Pos] = []
 
-    while stack:
-        current = stack.pop()
+    while q:
+        current = q.popleft()
         explored_order.append(current)
 
         if current == goal:
             break
 
         r, c = current
-        for nxt in maze.neighbors(r, c):   # droite, bas, gauche, haut
+        for nxt in maze.neighbors(r, c):
             if nxt not in visited:
                 visited.add(nxt)
                 came_from[nxt] = current
-                stack.append(nxt)
+                q.append(nxt)
 
     path = reconstruct(came_from, goal)
-
     t1 = time.perf_counter()
+
     return SearchResult(
         path=path,
         explored_order=explored_order,
